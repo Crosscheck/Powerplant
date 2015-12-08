@@ -1,2 +1,2 @@
-# yo-power-plant
-A repository that holds a number of Yeoman generators to scafold our projects.
+# Power plant
+A repository that holds a number of tools to scafold our projects.
