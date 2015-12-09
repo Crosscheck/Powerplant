@@ -1,2 +1,2 @@
-# Power plant
+# Powerplant
 A repository that holds a number of tools to scafold our projects.
