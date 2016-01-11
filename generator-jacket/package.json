@@ -1,0 +1,25 @@
+{
+  "name": "generator-jacket",
+  "version": "1.0.0",
+  "description": "The jacket generator can generate jacket projects that were configured by the enduser",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Crosscheck/Powerplant/"
+  },
+  "keywords": [
+    "jacket",
+    "scss",
+    "yeoman-generator",
+    "gulp",
+    "bourbon"
+  ],
+  "author": "One-agency",
+  "license": "MIT",
+  "dependencies": {
+    "yeoman-generator": "^0.22.2"
+  }
+}
