@@ -10,11 +10,6 @@ module.exports = generators.Base.extend({
   constructor: function () {
     generators.Base.apply(this, arguments);
 
-    this.argument("name", {
-      type: String,
-      required: true
-    });
-
     this.option("drupal-theme", {
       desc: "When this flag is on, it will check the path flag, and split the config files from the src and dist folders.",
       type: Boolean
@@ -60,6 +55,14 @@ module.exports = generators.Base.extend({
     }
 
     var prompts = [{
+      type: "input",
+      name: "appName",
+      message: "What is the name of this project?"
+    }, {
+      type: "input",
+      name: "appDescr",
+      message: "Please give a simple description for this project?"
+    }, {
       type: "checkbox",
       name: "scssFiles",
       message: "What scss files would you like me to load?",
@@ -87,6 +90,8 @@ module.exports = generators.Base.extend({
     }];
 
     this.prompt(prompts, function (answers) {
+      this.appName = answers.appName;
+      this.appDescr = answers.appDescr;
       this.includeScssBase = _.contains(answers.scssFiles, "includeScss-base");
       this.includeScssComponent = _.contains(answers.scssFiles, "includeScssCompo-nent");
       this.inlcudeScssHelper = _.contains(answers.scssFiles, "inlcudeScssHe-lper");
@@ -97,14 +102,25 @@ module.exports = generators.Base.extend({
   },
 
   writing: {
+    configs: function () {
+      this.fs.copyTpl(
+        this.templatePath("breakpoints.json"),
+        this.destinationPath("breakpoints.json"),
+        {}
+      );
+
+      this.fs.copyTpl(
+        this.templatePath("config.json"),
+        this.destinationPath("config.json"),
+        {}
+      );
+    },
+
     gulpfile: function () {
       this.fs.copyTpl(
         this.templatePath("gulpfile.js"),
         this.destinationPath("gulpfile.js"),
-        {
-          // date: (new Date).toISOString().split("T")[0]
-          // name: this.pkg.name,
-        }
+        {}
       );
     },
 
@@ -112,7 +128,21 @@ module.exports = generators.Base.extend({
       this.fs.copyTpl(
         this.templatePath("package.json"),
         this.destinationPath("package.json"),
-        {}
+        {
+          appName: this.appName,
+          appDescr: this.appDescr,
+        }
+      );
+    },
+
+    scssLint: function () {
+      this.fs.copyTpl(
+        this.templatePath(".scss-lint.yml"),
+        this.destinationPath(".scss-lint.yml"),
+        {
+          // appName: this.appName,
+          // appDescr: this.appDescr,
+        }
       );
     },
 
@@ -124,10 +154,16 @@ module.exports = generators.Base.extend({
       this.fs.copyTpl(
         this.templatePath("bower.json"),
         this.destinationPath("bower.json"),
-        {}
+        {
+          appName: this.appName,
+          appDescr: this.appDescr,
+        }
       );
     },
 
+    dist: function () {
+      this.directory(this.templatePath("dist"), this.destinationPath("dist"));
+    },
 
     styles: function () {
       this.directory(this.templatePath("src/scss/utils"), this.destinationPath("src/scss/utils"));
