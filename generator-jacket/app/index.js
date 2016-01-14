@@ -93,10 +93,10 @@ module.exports = generators.Base.extend({
       this.appName = answers.appName;
       this.appDescr = answers.appDescr;
       this.includeScssBase = _.contains(answers.scssFiles, "includeScss-base");
-      this.includeScssComponent = _.contains(answers.scssFiles, "includeScssCompo-nent");
-      this.inlcudeScssHelper = _.contains(answers.scssFiles, "inlcudeScssHe-lper");
-      this.inlcudeScssLayout = _.contains(answers.scssFiles, "inlcudeScssLa-yout");
-      this.includeScssPrint = _.contains(answers.scssFiles, "includeScssP-rint");
+      this.includeScssComponent = _.contains(answers.scssFiles, "includeScss-component");
+      this.inlcudeScssHelper = _.contains(answers.scssFiles, "inlcudeScss-helper");
+      this.inlcudeScssLayout = _.contains(answers.scssFiles, "inlcudeScss-layout");
+      this.includeScssPrint = _.contains(answers.scssFiles, "includeScss-print");
       done();
     }.bind(this));
   },
