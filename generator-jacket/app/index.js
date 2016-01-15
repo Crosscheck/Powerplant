@@ -38,7 +38,9 @@ module.exports = generators.Base.extend({
     }
 
     if(this.options.path !== this.destinationRoot() && this.options.drupalTheme === true) {
-      this.drupalTheme = this.options.path;
+      this.theme = this.options.path + "/";
+    } else {
+      this.theme = "";
     }
   },
 
@@ -112,7 +114,9 @@ module.exports = generators.Base.extend({
       this.fs.copyTpl(
         this.templatePath("config.json"),
         this.destinationPath("config.json"),
-        {}
+        {
+          theme: this.theme
+        }
       );
     },
 
@@ -120,7 +124,10 @@ module.exports = generators.Base.extend({
       this.fs.copyTpl(
         this.templatePath("gulpfile.js"),
         this.destinationPath("gulpfile.js"),
-        {}
+        {
+          dest: this.destinationPath(),
+          theme: this.options.path
+        }
       );
     },
 
@@ -162,33 +169,33 @@ module.exports = generators.Base.extend({
     },
 
     dist: function () {
-      this.directory(this.templatePath("dist"), this.destinationPath("dist"));
+      this.directory(this.templatePath("dist"), this.destinationPath(this.theme + "dist"));
     },
 
     styles: function () {
-      this.directory(this.templatePath("src/scss/utils"), this.destinationPath("src/scss/utils"));
+      this.directory(this.templatePath("src/scss/utils"), this.destinationPath(this.theme + "src/scss/utils"));
 
       if (this.includeScssBase) {
-        this.fs.copy(this.templatePath("src/scss/base-styles.scss"), this.destinationPath("src/scss/base-styles.scss"));
-        this.directory(this.templatePath("src/scss/base"), this.destinationPath("src/scss/base"));
+        this.fs.copy(this.templatePath("src/scss/base-styles.scss"), this.destinationPath(this.theme + "src/scss/base-styles.scss"));
+        this.directory(this.templatePath("src/scss/base"), this.destinationPath(this.theme + "src/scss/base"));
       }
 
       if (this.includeScssComponent) {
-        this.fs.copy(this.templatePath("src/scss/component-styles.scss"), this.destinationPath("src/scss/component-styles.scss"));
-        this.directory(this.templatePath("src/scss/components"), this.destinationPath("src/scss/components"));
+        this.fs.copy(this.templatePath("src/scss/component-styles.scss"), this.destinationPath(this.theme + "src/scss/component-styles.scss"));
+        this.directory(this.templatePath("src/scss/components"), this.destinationPath(this.theme + "src/scss/components"));
       }
 
       if (this.inlcudeScssHelper) {
-        this.fs.copy(this.templatePath("src/scss/helper-styles.scss"), this.destinationPath("src/scss/helper-styles.scss"));
+        this.fs.copy(this.templatePath("src/scss/helper-styles.scss"), this.destinationPath(this.theme + "src/scss/helper-styles.scss"));
       }
 
       if (this.inlcudeScssLayout) {
-        this.fs.copy(this.templatePath("src/scss/layout-styles.scss"), this.destinationPath("src/scss/layout-styles.scss"));
+        this.fs.copy(this.templatePath("src/scss/layout-styles.scss"), this.destinationPath(this.theme + "src/scss/layout-styles.scss"));
       }
 
       if (this.includeScssPrint) {
-        this.directory(this.templatePath("src/scss/print"), this.destinationPath("src/scss/print"));
-        this.fs.copy(this.templatePath("src/scss/print-styles.scss"), this.destinationPath("src/scss/print-styles.scss"));
+        this.directory(this.templatePath("src/scss/print"), this.destinationPath(this.theme + "src/scss/print"));
+        this.fs.copy(this.templatePath("src/scss/print-styles.scss"), this.destinationPath(this.theme + "src/scss/print-styles.scss"));
       }
     }
   },
