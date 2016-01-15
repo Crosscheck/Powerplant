@@ -9,6 +9,7 @@ var _ = require("underscore");
 module.exports = generators.Base.extend({
   constructor: function () {
     generators.Base.apply(this, arguments);
+    this.breakpoints = require(this.templatePath("breakpoints.json"));
 
     this.option("drupal-theme", {
       desc: "When this flag is on, it will check the path flag, and split the config files from the src and dist folders.",
@@ -46,7 +47,6 @@ module.exports = generators.Base.extend({
 
   initializing: function () {
     this.pkg = require("../package.json");
-    // this.log(this.pkg);
   },
 
   prompting: function () {
@@ -64,6 +64,44 @@ module.exports = generators.Base.extend({
       type: "input",
       name: "appDescr",
       message: "Please give a simple description for this project?"
+    }, {
+      type: "confirm",
+      name: "jade",
+      message: "Do you want to use the Jade template engine?",
+      default: true
+    }, {
+      type: "confirm",
+      name: "html",
+      message: "Do you want to use the h5bp index.html?",
+      default: true
+    }, {
+      type: "confirm",
+      name: "browserSync",
+      message: "Do you want to use the Browsersync server for easy testing?",
+      default: true
+    }, {
+      type: "confirm",
+      name: "scssLint",
+      message: "Do you want to use scss-lint to keep the scss code consistent?",
+      default: true
+    }, {
+      type: "confirm",
+      name: "sassDoc",
+      message: "Do you want to use sassDoc to document your project?",
+      default: true
+    }, {
+      type: "checkbox",
+      name: "breakpoints",
+      message: "What breakpoints would you like me to use?",
+      choices: [{
+        name: "bla",
+        value: "bla",
+        checked: true
+      }, {
+        name: "blabla",
+        value: "blabla",
+        checked: true
+      }]
     }, {
       type: "checkbox",
       name: "scssFiles",
@@ -89,16 +127,41 @@ module.exports = generators.Base.extend({
         value: "includeScss-print",
         checked: true
       }]
+    }, {
+      type: "input",
+      name: "width",
+      message: "What is the width of your project? (example: 100% or 1200)",
+      default: 1170
+    }, {
+      type: "confirm",
+      name: "grid",
+      message: "Do you want to draw a visual grid?",
+      default: false
     }];
 
     this.prompt(prompts, function (answers) {
       this.appName = answers.appName;
       this.appDescr = answers.appDescr;
+
+      this.jade = answers.jade;
+      this.html = answers.html;
+
+      this.browserSync = answers.browserSync;
+
+      this.scssLint = answers.scssLint;
+      this.sassDoc = answers.sassDoc;
+
+      this.whichBreakpoints = answers.breakpoints;
+
       this.includeScssBase = _.contains(answers.scssFiles, "includeScss-base");
       this.includeScssComponent = _.contains(answers.scssFiles, "includeScss-component");
       this.inlcudeScssHelper = _.contains(answers.scssFiles, "inlcudeScss-helper");
       this.inlcudeScssLayout = _.contains(answers.scssFiles, "inlcudeScss-layout");
       this.includeScssPrint = _.contains(answers.scssFiles, "includeScss-print");
+
+      this.width = answers.width;
+      this.grid = answers.grid;
+
       done();
     }.bind(this));
   },
