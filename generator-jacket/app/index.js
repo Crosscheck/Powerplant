@@ -116,11 +116,11 @@ module.exports = generators.Base.extend({
         checked: true
       }, {
         name: "helper-styles.scss",
-        value: "inlcudeScss-helper",
+        value: "includeScss-helper",
         checked: true
       }, {
         name: "layout-styles.scss",
-        value: "inlcudeScss-layout",
+        value: "includeScss-layout",
         checked: true
       }, {
         name: "print-styles.scss",
@@ -129,12 +129,12 @@ module.exports = generators.Base.extend({
       }]
     }, {
       type: "input",
-      name: "width",
+      name: "siteWidth",
       message: "What is the width of your project? (example: 100% or 1200)",
       default: 1170
     }, {
       type: "confirm",
-      name: "grid",
+      name: "drawGrid",
       message: "Do you want to draw a visual grid?",
       default: false
     }];
@@ -155,12 +155,12 @@ module.exports = generators.Base.extend({
 
       this.includeScssBase = _.contains(answers.scssFiles, "includeScss-base");
       this.includeScssComponent = _.contains(answers.scssFiles, "includeScss-component");
-      this.inlcudeScssHelper = _.contains(answers.scssFiles, "inlcudeScss-helper");
-      this.inlcudeScssLayout = _.contains(answers.scssFiles, "inlcudeScss-layout");
+      this.includeScssHelper = _.contains(answers.scssFiles, "includeScss-helper");
+      this.includeScssLayout = _.contains(answers.scssFiles, "includeScss-layout");
       this.includeScssPrint = _.contains(answers.scssFiles, "includeScss-print");
 
-      this.width = answers.width;
-      this.grid = answers.grid;
+      this.siteWidth = answers.siteWidth;
+      this.drawGrid = answers.drawGrid;
 
       done();
     }.bind(this));
@@ -178,7 +178,8 @@ module.exports = generators.Base.extend({
         this.templatePath("config.json"),
         this.destinationPath("config.json"),
         {
-          theme: this.theme
+          theme: this.theme,
+          jade: this.jade
         }
       );
     },
@@ -189,7 +190,11 @@ module.exports = generators.Base.extend({
         this.destinationPath("gulpfile.js"),
         {
           dest: this.destinationPath(),
-          theme: this.options.path
+          theme: this.options.path,
+          jade: this.jade,
+          browserSync: this.browserSync,
+          scssLint: this.scssLint,
+          sassDoc: this.sassDoc
         }
       );
     },
@@ -201,19 +206,23 @@ module.exports = generators.Base.extend({
         {
           appName: this.appName,
           appDescr: this.appDescr,
+          jade: this.jade,
+          browserSync: this.browserSync,
+          scssLint: this.scssLint,
+          sassDoc: this.sassDoc
         }
       );
     },
 
     scssLint: function () {
-      this.fs.copyTpl(
-        this.templatePath(".scss-lint.yml"),
-        this.destinationPath(".scss-lint.yml"),
-        {
-          // appName: this.appName,
-          // appDescr: this.appDescr,
-        }
-      );
+      if (this.scssLint) {
+
+        this.fs.copyTpl(
+          this.templatePath(".scss-lint.yml"),
+          this.destinationPath(".scss-lint.yml"),
+          {}
+        );
+      }
     },
 
     git: function () {
@@ -235,8 +244,62 @@ module.exports = generators.Base.extend({
       this.directory(this.templatePath("dist"), this.destinationPath(this.theme + "dist"));
     },
 
+    jade: function () {
+      if (this.jade) {
+        this.fs.copyTpl(
+          this.templatePath("src/jade/**/*"),
+          this.destinationPath(this.theme + "src/jade"),
+          {
+            appName: this.appName,
+            appDescr: this.appDescr,
+            jade: this.jade,
+            browserSync: this.browserSync,
+            scssLint: this.scssLint,
+            sassDoc: this.sassDoc,
+            includeScssBase: this.includeScssBase,
+            includeScssComponent: this.includeScssComponent,
+            includeScssHelper: this.includeScssHelper,
+            includeScssLayout: this.includeScssLayout,
+            includeScssPrint: this.includeScssPrint
+          }
+        );
+      }
+    },
+
+    html: function () {
+      if(this.html) {
+        this.fs.copyTpl(
+          this.templatePath("dist/index.html"),
+          this.destinationPath(this.theme + "dist/index.html"),
+          {
+            appName: this.appName,
+            appDescr: this.appDescr,
+            jade: this.jade,
+            browserSync: this.browserSync,
+            scssLint: this.scssLint,
+            sassDoc: this.sassDoc,
+            includeScssBase: this.includeScssBase,
+            includeScssComponent: this.includeScssComponent,
+            includeScssHelper: this.includeScssHelper,
+            includeScssLayout: this.includeScssLayout,
+            includeScssPrint: this.includeScssPrint
+          }
+        );
+      } else {
+        this.fs.delete(this.destinationPath(this.theme + "dist/index.html"));
+      }
+    },
+
     styles: function () {
-      this.directory(this.templatePath("src/scss/utils"), this.destinationPath(this.theme + "src/scss/utils"));
+      this.fs.copyTpl(
+        this.templatePath("src/scss/utils/**/*"),
+        this.destinationPath(this.theme + "src/scss/utils"),
+        {
+          siteWidth: this.siteWidth,
+          drawGrid: this.drawGrid,
+          sassDoc: this.sassDoc
+        }
+      );
 
       if (this.includeScssBase) {
         this.fs.copy(this.templatePath("src/scss/base-styles.scss"), this.destinationPath(this.theme + "src/scss/base-styles.scss"));
@@ -248,11 +311,11 @@ module.exports = generators.Base.extend({
         this.directory(this.templatePath("src/scss/components"), this.destinationPath(this.theme + "src/scss/components"));
       }
 
-      if (this.inlcudeScssHelper) {
+      if (this.includeScssHelper) {
         this.fs.copy(this.templatePath("src/scss/helper-styles.scss"), this.destinationPath(this.theme + "src/scss/helper-styles.scss"));
       }
 
-      if (this.inlcudeScssLayout) {
+      if (this.includeScssLayout) {
         this.fs.copy(this.templatePath("src/scss/layout-styles.scss"), this.destinationPath(this.theme + "src/scss/layout-styles.scss"));
       }
 
@@ -264,9 +327,17 @@ module.exports = generators.Base.extend({
   },
 
   install: function () {
+    var that = this;
     this.installDependencies({
       skipMessage: this.options["skip-install-message"],
-      skipInstall: this.options["skip-install"]
+      skipInstall: this.options["skip-install"],
+      callback: function() {
+        if(that.scssLint) {
+          that.spawnCommand("gem", ["install", "scss_lint"]);
+        }
+
+        that.spawnCommand("gulp", ["help"]);
+      }
     });
   }
 });
