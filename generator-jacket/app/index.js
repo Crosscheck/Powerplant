@@ -201,7 +201,7 @@ module.exports = generators.Base.extend({
 
     packageJSON: function () {
       this.fs.copyTpl(
-        this.templatePath("package.json"),
+        this.templatePath("_package.json"),
         this.destinationPath("package.json"),
         {
           appName: this.appName,
@@ -226,7 +226,7 @@ module.exports = generators.Base.extend({
     },
 
     git: function () {
-      this.fs.copy(this.templatePath(".gitignore"), this.destinationPath(".gitignore"));
+      this.fs.copy(this.templatePath("_gitignore"), this.destinationPath(".gitignore"));
     },
 
     bower: function () {
