@@ -211,7 +211,7 @@ module.exports = generators.Base.extend({
 
     packageJSON: function () {
       this.fs.copyTpl(
-        this.templatePath("_package.json"),
+        this.templatePath("package.json"),
         this.destinationPath("package.json"),
         {
           appName: this.appName,
