@@ -10,6 +10,14 @@ module.exports = generators.Base.extend({
   constructor: function () {
     generators.Base.apply(this, arguments);
     this.breakpoints = require(this.templatePath("breakpoints.json"));
+    var bpQuestion = [];
+
+    _.each(this.breakpoints.breakpoints, function(e, i) {
+      if(i !== "zero") {
+        bpQuestion.push({name: i + " ( " + e.width + " )", value: "bp_" + i, checked: true});
+      }
+    });
+    this.bpQuestion = bpQuestion;
 
     this.option("drupal-theme", {
       desc: "When this flag is on, it will check the path flag, and split the config files from the src and dist folders.",
@@ -59,11 +67,17 @@ module.exports = generators.Base.extend({
     var prompts = [{
       type: "input",
       name: "appName",
-      message: "What is the name of this project?"
+      message: "What is the name of this project?",
+      validate: function(str) {
+        return str !== "" && str.length >= 2;
+      }
     }, {
       type: "input",
       name: "appDescr",
-      message: "Please give a simple description for this project?"
+      message: "Please give a simple description for this project?",
+      validate: function(str) {
+        return str !== "";
+      }
     }, {
       type: "confirm",
       name: "jade",
@@ -93,15 +107,7 @@ module.exports = generators.Base.extend({
       type: "checkbox",
       name: "breakpoints",
       message: "What breakpoints would you like me to use?",
-      choices: [{
-        name: "bla",
-        value: "bla",
-        checked: true
-      }, {
-        name: "blabla",
-        value: "blabla",
-        checked: true
-      }]
+      choices: this.bpQuestion
     }, {
       type: "checkbox",
       name: "scssFiles",
@@ -131,12 +137,15 @@ module.exports = generators.Base.extend({
       type: "input",
       name: "siteWidth",
       message: "What is the width of your project? (example: 100% or 1200)",
-      default: 1170
+      default: 1170,
+      validate: function(str) {
+        return Number.parseInt(str, 10) > 0;
+      }
     }, {
       type: "confirm",
       name: "drawGrid",
       message: "Do you want to draw a visual grid?",
-      default: false
+      default: true
     }];
 
     this.prompt(prompts, function (answers) {
@@ -152,7 +161,6 @@ module.exports = generators.Base.extend({
       this.sassDoc = answers.sassDoc;
 
       this.whichBreakpoints = answers.breakpoints;
-
       this.includeScssBase = _.contains(answers.scssFiles, "includeScss-base");
       this.includeScssComponent = _.contains(answers.scssFiles, "includeScss-component");
       this.includeScssHelper = _.contains(answers.scssFiles, "includeScss-helper");
@@ -169,9 +177,11 @@ module.exports = generators.Base.extend({
   writing: {
     configs: function () {
       this.fs.copyTpl(
-        this.templatePath("breakpoints.json"),
+        this.templatePath("_breakpoints.json"),
         this.destinationPath("breakpoints.json"),
-        {}
+        {
+          whichBreakpoints: this.whichBreakpoints
+        }
       );
 
       this.fs.copyTpl(
