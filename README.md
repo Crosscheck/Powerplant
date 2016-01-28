@@ -1,2 +1,2 @@
 # Powerplant
-A repository that holds a number of tools to scafold our projects.
+A repository that holds tools to scafold our projects and components to increase productivity.
