@@ -137,9 +137,26 @@ module.exports = generators.Base.extend({
         this.templatePath("themeSanitized.info.yml"),
         this.destinationPath(this.themeSanitized + ".info.yml"), {
           themeName: this.themeName,
+          themeSanitized: this.themeSanitized,
           themeDescription: this.themeDescription,
           baseTheme: this.baseTheme,
           regions: this.regions
+        }
+      );
+    },
+    themeFile: function() {
+      this.fs.copyTpl(
+        this.templatePath("themeSanitized.theme"),
+        this.destinationPath(this.themeSanitized + ".theme"), {
+          themeName: this.themeName,
+          themeSanitized: this.themeSanitized
+        }
+      );
+    },
+    librariesFile: function() {
+      this.fs.copyTpl(
+        this.templatePath("themeSanitized.libraries.yml"),
+        this.destinationPath(this.themeSanitized + ".libraries.yml"), {
         }
       );
     }
