@@ -1,0 +1,3 @@
+[submodule "generator-werewolf/app/templates"]
+	path = generator-werewolf/app/templates
+	url = https://github.com/Crosscheck/Werewolf.git

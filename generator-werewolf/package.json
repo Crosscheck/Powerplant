@@ -1,0 +1,32 @@
+{
+  "name": "generator-werewolf",
+  "version": "1.0.0",
+  "description": "The werewolf generator can generate Werewolf Drupal 8 themes",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Crosscheck/Powerplant/"
+  },
+  "keywords": [
+    "jacket",
+    "scss",
+    "yeoman-generator",
+    "gulp",
+    "bourbon"
+  ],
+  "author": "ONE-agency",
+  "license": "MIT",
+  "dependencies": {
+    "underscore": "^1.8.3",
+    "wiredep": "^3.0.0",
+    "yeoman-generator": "^0.22.2",
+    "yosay": "^1.1.0",
+    "mkdirp": "^0.5.1"
+  },
+  "files": [
+    "app"
+  ]
+}
