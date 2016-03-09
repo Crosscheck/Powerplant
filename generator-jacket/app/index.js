@@ -343,7 +343,7 @@ module.exports = generators.Base.extend({
       skipInstall: this.options["skip-install"],
       callback: function() {
         if(that.scssLint) {
-          that.spawnCommand("gem", ["install", "scss_lint", "-v '~> 0.43'"]);
+          that.spawnCommand("gem", ["install", "scss_lint", "-v", "~> 0.43.0"]);
         }
 
         that.spawnCommand("gulp", ["help"]);
