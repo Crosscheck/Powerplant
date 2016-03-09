@@ -1,0 +1,4 @@
+[submodule "generator-jacket/app/templates"]
+	path = generator-jacket/app/templates
+	url = git@github.com:Crosscheck/Jacket.git
+	branch = generator
