@@ -177,7 +177,7 @@ module.exports = generators.Base.extend({
   writing: {
     configs: function () {
       this.fs.copyTpl(
-        this.templatePath("_breakpoints.json"),
+        this.templatePath("breakpoints.json"),
         this.destinationPath("breakpoints.json"),
         {
           whichBreakpoints: this.whichBreakpoints
@@ -343,7 +343,7 @@ module.exports = generators.Base.extend({
       skipInstall: this.options["skip-install"],
       callback: function() {
         if(that.scssLint) {
-          that.spawnCommand("gem", ["install", "scss_lint"]);
+          that.spawnCommand("gem", ["install", "scss_lint", "-v '~> 0.43'"]);
         }
 
         that.spawnCommand("gulp", ["help"]);
