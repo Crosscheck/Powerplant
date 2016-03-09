@@ -1,6 +1,6 @@
 {
   "name": "generator-jacket",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "The jacket generator can generate jacket projects that were configured by the enduser",
   "main": "index.js",
   "scripts": {
